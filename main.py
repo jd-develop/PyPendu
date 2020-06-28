@@ -18,8 +18,8 @@ def choose_word():
         label_subtitle3
 
     # Vérification de l'existance du fichier "words.txt" et choix du mot
-    if os.path.exists("Data/words.txt"):
-        with open("Data/words.txt", "r+") as words_file:
+    if os.path.exists("words.txt"):
+        with open("words.txt", "r+") as words_file:
             words_list = words_file.readlines()
             word = random.choice(words_list)
             words_file.close()
@@ -61,119 +61,124 @@ def letter_entered():
     """ Vérifie si la lettre est dans le mot, gère les érreurs, vérifie si le joueur a gagné, perdu ou rien """
     global letter_entry, founded_letters, missing_letters, word_with_missing_letters, hanged, label_subtitle1, \
         label_subtitle2, word, frame1, label_title, label_subtitle, label_subtitle3, button, label_subtitle4, \
-        label_errors, button2, error
-
-    # Récupération de la lettre
-    letter = letter_entry.get().upper()
-    alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
-                'V', 'W', 'X', 'Y', 'Z']
-
-    # Vérifications
-    if letter in missing_letters:  # Vérification de la présence de la lettre dans les lettres manquantes
-        # Suppression de la lettre dans les lettres manquantes et mise à jour du mot avec les lettres manquantes
-        founded_letters += letter
-        missing_letters.remove(letter)
-        e = 1
-        word_with_missing_letters = word[0]
-        for _ in itertools.repeat(None, len(word) - 2):
-            if word[e] in founded_letters:
-                word_with_missing_letters += word[e]
-            else:
-                word_with_missing_letters += '_ '
-            e += 1
-    elif not len(letter) == 1:  # Vérification de la longueur de ce qui a été entré dans l'entrée "letter_entry"
+        label_errors, button2, error, is_in_you_win_or_you_lose_option
+    if is_in_you_win_or_you_lose_option:
         pass
-    elif letter not in alphabet:  # Vérification de la présence de la lettre dans l'alphabet
-        pass
-    elif letter not in errors and letter not in word[1:(len(word)-1)]:  # Vérification de la présence de la lettre dans
-        # les érreurs
-        errors.append(letter)
-        hanged += 1
-        error = True
-
-    # Mise à jour de l'interface graphique
-    label_title.pack_forget()
-    label_subtitle.pack_forget()
-    label_subtitle1.pack_forget()
-    label_subtitle2.pack_forget()
-    label_subtitle3.pack_forget()
-    letter_entry.pack_forget()
-    button.pack_forget()
-    label_errors.pack_forget()
-    label_subtitle4.pack_forget()
-
-    if '_' not in word_with_missing_letters:
-        # Gagné !
-        label_title = Label(frame1, text='PyPendu', font=('Tahoma', 40), bg='orange')
-        label_subtitle = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
-        label_subtitle1 = Label(frame1, text=word_with_missing_letters, font=('Tahoma', 10), bg='orange')
-        label_subtitle2 = Label(frame1, text="Vous avez gagné !", font=('Tahoma', 10), bg='orange')
-        label_subtitle3 = Label(frame1, text="", font=('Tahoma', 10), bg='orange')
-        button = Button(frame1, text='Quitter', font=('Tahoma', 10), bg='darkorange', command=lambda: quit(0))
-        label_subtitle4 = Label(frame1, text="", font=('Tahoma', 10), bg='orange')
-        button2 = Button(frame1, text='Recommencer', font=('Tahoma', 10), bg='darkorange', command=lambda: restart())
-
-        label_title.pack()
-        label_subtitle.pack()
-        label_subtitle1.pack()
-        label_subtitle2.pack()
-        button.pack()
-        label_subtitle4.pack()
-        button2.pack()
-    elif hanged == 10:
-        # Perdu !
-        label_title = Label(frame1, text='PyPendu', font=('Tahoma', 40), bg='orange')
-        label_subtitle = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
-        label_subtitle1 = Label(frame1, text=word_with_missing_letters, font=('Tahoma', 10), bg='orange')
-        label_subtitle2 = Label(frame1, text="Vous avez perdu... Le mot était {}".format(word), font=('Tahoma', 10),
-                                bg='orange')
-        label_subtitle3 = Label(frame1, text="", font=('Tahoma', 10), bg='orange')
-        button = Button(frame1, text='Quitter', font=('Tahoma', 10), bg='darkorange', command=lambda: quit(0))
-        label_subtitle4 = Label(frame1, text="", font=('Tahoma', 10), bg='orange')
-        button2 = Button(frame1, text='Réessayer', font=('Tahoma', 10), bg='darkorange', command=lambda: restart())
-
-        label_title.pack()
-        label_subtitle.pack()
-        label_subtitle1.pack()
-        label_subtitle2.pack()
-        button.pack()
-        label_subtitle4.pack()
-        button2.pack()
     else:
-        # Continuer la partie
-        label_title = Label(frame1, text='PyPendu', font=('Tahoma', 40), bg='orange')
-        label_subtitle = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
-        label_subtitle1 = Label(frame1, text=word_with_missing_letters, font=('Tahoma', 10), bg='orange')
-        label_subtitle2 = Label(frame1, text="Entrez une lettre :", font=('Tahoma', 10), bg='orange')
-        letter_entry = Entry(frame1, font=('Tahoma', 10), bg='orange')
-        label_subtitle3 = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
-        button = Button(frame1, text='OK', font=('Tahoma', 10), bg='darkorange', command=lambda: letter_entered())
-        if error:
-            label_subtitle4 = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
-            if len(errors) == 1:
-                label_errors = Label(frame1, text='Erreur : {}'.format(", ".join(errors)), font=('Tahoma', 10),
-                                     bg='orange')
-            else:
-                label_errors = Label(frame1, text='Erreurs : {}'.format(", ".join(errors)), font=('Tahoma', 10),
-                                     bg='orange')
+        # Récupération de la lettre
+        letter = letter_entry.get().upper()
+        alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+                    'U', 'V', 'W', 'X', 'Y', 'Z']
 
-        label_title.pack()
-        label_subtitle.pack()
-        label_subtitle1.pack()
-        label_subtitle2.pack()
-        letter_entry.pack()
-        label_subtitle3.pack()
-        button.pack()
-        if error:
+        # Vérifications
+        if letter in missing_letters:  # Vérification de la présence de la lettre dans les lettres manquantes
+            # Suppression de la lettre dans les lettres manquantes et mise à jour du mot avec les lettres manquantes
+            founded_letters += letter
+            missing_letters.remove(letter)
+            e = 1
+            word_with_missing_letters = word[0]
+            for _ in itertools.repeat(None, len(word) - 2):
+                if word[e] in founded_letters:
+                    word_with_missing_letters += word[e]
+                else:
+                    word_with_missing_letters += '_ '
+                e += 1
+        elif not len(letter) == 1:  # Vérification de la longueur de ce qui a été entré dans l'entrée "letter_entry"
+            pass
+        elif letter not in alphabet:  # Vérification de la présence de la lettre dans l'alphabet
+            pass
+        elif letter not in errors and letter not in word[1:(len(word)-1)]:  # Vérification de la présence de la lettre
+            # dans les érreurs
+            errors.append(letter)
+            hanged += 1
+            error = True
+
+        # Mise à jour de l'interface graphique
+        label_title.pack_forget()
+        label_subtitle.pack_forget()
+        label_subtitle1.pack_forget()
+        label_subtitle2.pack_forget()
+        label_subtitle3.pack_forget()
+        letter_entry.pack_forget()
+        button.pack_forget()
+        label_errors.pack_forget()
+        label_subtitle4.pack_forget()
+
+        if '_' not in word_with_missing_letters:
+            # Gagné !
+            is_in_you_win_or_you_lose_option = True
+            label_title = Label(frame1, text='PyPendu', font=('Tahoma', 40), bg='orange')
+            label_subtitle = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
+            label_subtitle1 = Label(frame1, text=word_with_missing_letters, font=('Tahoma', 10), bg='orange')
+            label_subtitle2 = Label(frame1, text="Vous avez gagné !", font=('Tahoma', 10), bg='orange')
+            label_subtitle3 = Label(frame1, text="", font=('Tahoma', 10), bg='orange')
+            button = Button(frame1, text='Quitter', font=('Tahoma', 10), bg='darkorange', command=lambda: quit(0))
+            label_subtitle4 = Label(frame1, text="", font=('Tahoma', 10), bg='orange')
+            button2 = Button(frame1, text='Recommencer', font=('Tahoma', 10), bg='darkorange',
+                             command=lambda: restart())
+
+            label_title.pack()
+            label_subtitle.pack()
+            label_subtitle1.pack()
+            label_subtitle2.pack()
+            button.pack()
             label_subtitle4.pack()
-            label_errors.pack()
+            button2.pack()
+        elif hanged == 10:
+            # Perdu !
+            is_in_you_win_or_you_lose_option = True
+            label_title = Label(frame1, text='PyPendu', font=('Tahoma', 40), bg='orange')
+            label_subtitle = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
+            label_subtitle1 = Label(frame1, text=word_with_missing_letters, font=('Tahoma', 10), bg='orange')
+            label_subtitle2 = Label(frame1, text="Vous avez perdu... Le mot était {}".format(word), font=('Tahoma', 10),
+                                    bg='orange')
+            label_subtitle3 = Label(frame1, text="", font=('Tahoma', 10), bg='orange')
+            button = Button(frame1, text='Quitter', font=('Tahoma', 10), bg='darkorange', command=lambda: quit(0))
+            label_subtitle4 = Label(frame1, text="", font=('Tahoma', 10), bg='orange')
+            button2 = Button(frame1, text='Réessayer', font=('Tahoma', 10), bg='darkorange', command=lambda: restart())
+
+            label_title.pack()
+            label_subtitle.pack()
+            label_subtitle1.pack()
+            label_subtitle2.pack()
+            button.pack()
+            label_subtitle4.pack()
+            button2.pack()
+        else:
+            # Continuer la partie
+            label_title = Label(frame1, text='PyPendu', font=('Tahoma', 40), bg='orange')
+            label_subtitle = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
+            label_subtitle1 = Label(frame1, text=word_with_missing_letters, font=('Tahoma', 10), bg='orange')
+            label_subtitle2 = Label(frame1, text="Entrez une lettre :", font=('Tahoma', 10), bg='orange')
+            letter_entry = Entry(frame1, font=('Tahoma', 10), bg='orange')
+            label_subtitle3 = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
+            button = Button(frame1, text='OK', font=('Tahoma', 10), bg='darkorange', command=lambda: letter_entered())
+            if error:
+                label_subtitle4 = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
+                if len(errors) == 1:
+                    label_errors = Label(frame1, text='Erreur : {}'.format(", ".join(errors)), font=('Tahoma', 10),
+                                         bg='orange')
+                else:
+                    label_errors = Label(frame1, text='Erreurs : {}'.format(", ".join(errors)), font=('Tahoma', 10),
+                                         bg='orange')
+
+            label_title.pack()
+            label_subtitle.pack()
+            label_subtitle1.pack()
+            label_subtitle2.pack()
+            letter_entry.pack()
+            label_subtitle3.pack()
+            button.pack()
+            if error:
+                label_subtitle4.pack()
+                label_errors.pack()
 
 
 def restart():
     """ Redémarre la partie """
     global letter_entry, label_subtitle1, label_subtitle2, frame1, label_title, label_subtitle, label_subtitle3,\
         button, label_subtitle4, label_errors, button2, word_with_missing_letters, missing_letters, founded_letters,\
-        hanged, errors, error
+        hanged, errors, error, is_in_you_win_or_you_lose_option
     label_title.pack_forget()
     label_subtitle.pack_forget()
     label_subtitle1.pack_forget()
@@ -202,10 +207,12 @@ def restart():
     label_subtitle3 = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
     label_subtitle4 = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
     label_errors = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
+    is_in_you_win_or_you_lose_option = False
     choose_word()
 
 
 def about():
+    """ Ouvre une fenêtre 'à propos' """
     about_window = Tk()
     about_window.title("À propos de PyPendu")
     about_window.geometry("800x200")
@@ -227,7 +234,7 @@ def about():
     subtitle.pack()
     wiki_label.pack()
     wiki_label.bind("<Button-1>",
-                    lambda e: webbrowser.open_new(r"https://duckduckgo.com"))
+                    lambda e: webbrowser.open_new(r"https://github.com/jd-develop/PyPendu/releases"))
     about_window.mainloop()
 
 
@@ -239,6 +246,7 @@ word = ''
 word_with_missing_letters = ''
 errors = []
 error = False
+is_in_you_win_or_you_lose_option = False
 
 # Création de la fenêtre
 main_window = Tk()
