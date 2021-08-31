@@ -9,7 +9,7 @@ import itertools
 import webbrowser
 
 __author__ = "Jean Dubois <jd-dev@laposte.net>"
-__version__ = "1.0"
+__version__ = "1.1"
 
 
 def choose_word():
@@ -54,6 +54,7 @@ def choose_word():
 
     # Empaquetage
     frame1.pack(expand=YES)
+    letter_entry.focus()
     main_window.mainloop()
 
 
@@ -172,6 +173,7 @@ def letter_entered():
             if error:
                 label_subtitle4.pack()
                 label_errors.pack()
+            letter_entry.focus()
 
 
 def restart():
@@ -218,7 +220,10 @@ def about():
     about_window.geometry("800x200")
     about_window.minsize(800, 200)
     about_window.maxsize(800, 200)
-    about_window.iconbitmap('icon.ico')
+    try:
+        about_window.iconbitmap('icon.ico')
+    except TclError:
+        pass
     about_window.config(background='orange')
     about_title = Label(about_window, text='PyPendu', font=('Tahoma', 40), bg='orange')
     author_subtitle = Label(about_window, text='Créé par {}'.format(__author__), font=('Tahoma', 10), bg='orange')
@@ -253,7 +258,10 @@ main_window = Tk()
 main_window.title("PyPendu")
 main_window.geometry("900x500")
 main_window.minsize(900, 500)
-main_window.iconbitmap('icon.ico')
+try:
+    main_window.iconbitmap('icon.ico')
+except TclError:
+    pass
 main_window.config(background='orange')
 
 # Création d'une frame
