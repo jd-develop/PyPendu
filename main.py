@@ -9,7 +9,7 @@ import itertools
 import webbrowser
 
 __author__ = "Jean Dubois <jd-dev@laposte.net>"
-__version__ = "1.1"
+__version__ = "1.1.1"
 
 
 def choose_word():
