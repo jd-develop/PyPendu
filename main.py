@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# coding:utf-8
 # Dev by Jean Dubois
 # Domaine public
 # PyPendu
@@ -13,13 +14,13 @@ __version__ = "1.1.1"
 
 
 def choose_word():
-    """ Choisis le mot parmis une liste et créée les labels tkinter correspondants """
+    """ Choisis le mot parmi une liste et créée les labels tkinter correspondants """
     global label_subtitle1, letter_entry, word, word_with_missing_letters, missing_letters, label_subtitle2, button, \
         label_subtitle3
 
-    # Vérification de l'existance du fichier "words.txt" et choix du mot
+    # Vérification de l'existence du fichier "words.txt" et choix du mot
     if os.path.exists("words.txt"):
-        with open("words.txt", "r+") as words_file:
+        with open("words.txt", "r+", encoding="UTF-8") as words_file:
             words_list = words_file.readlines()
             word = random.choice(words_list)
             words_file.close()
@@ -59,7 +60,7 @@ def choose_word():
 
 
 def letter_entered():
-    """ Vérifie si la lettre est dans le mot, gère les érreurs, vérifie si le joueur a gagné, perdu ou rien """
+    """ Vérifie si la lettre est dans le mot, gère les erreurs, vérifie si le joueur a gagné, perdu ou rien """
     global letter_entry, founded_letters, missing_letters, word_with_missing_letters, hanged, label_subtitle1, \
         label_subtitle2, word, frame1, label_title, label_subtitle, label_subtitle3, button, label_subtitle4, \
         label_errors, button2, error, is_in_you_win_or_you_lose_option
@@ -89,7 +90,7 @@ def letter_entered():
         elif letter not in alphabet:  # Vérification de la présence de la lettre dans l'alphabet
             pass
         elif letter not in errors and letter not in word[1:(len(word)-1)]:  # Vérification de la présence de la lettre
-            # dans les érreurs
+            # dans les erreurs
             errors.append(letter)
             hanged += 1
             error = True
@@ -272,7 +273,7 @@ button = Button(frame1)
 button2 = Button(frame1)
 
 
-# Création de texte à l'interieur de la frame
+# Création de texte à l'intérieur de la frame
 label_title = Label(frame1, text='PyPendu', font=('Tahoma', 40), bg='orange')
 label_subtitle = Label(frame1, text='', font=('Tahoma', 10), bg='orange')
 
